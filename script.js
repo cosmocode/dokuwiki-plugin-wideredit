@@ -3,6 +3,8 @@ jQuery(function () {
     let selected = null;
     const $buttons = jQuery('.dokuwiki .secedit.editbutton_section .btn_secedit button');
 
+    const LONGPRESS = 350;  // same as CSS transition time
+
     $buttons
         /**
          * disable standard action
@@ -18,7 +20,9 @@ jQuery(function () {
         .on('mousedown touchstart', (event) => {
             const target = event.targetTouches ? event.targetTouches[0].target : event.target;
             timer = Date.now();
-            jQuery(target).addClass('holding');
+            // start the CSS transition
+            $buttons.not(target).removeClass('selected');
+            jQuery(target).toggleClass('selected');
         })
         /**
          * Handle button release
@@ -26,10 +30,9 @@ jQuery(function () {
         .on('mouseup touchstop', (event) => {
             const target = event.targetTouches ? event.targetTouches[0].target : event.target;
             const $me = jQuery(target);
-            $me.removeClass('holding');
 
             const timed = Date.now() - timer;
-            const isLongpress = timed > 250;
+            const isLongpress = timed > LONGPRESS;
 
             if (isLongpress) {
                 $buttons.removeClass('selected');
@@ -63,6 +66,6 @@ jQuery(function () {
     function newRange(r1, r2) {
         const [r1min, r1max] = r1.split('-');
         const [r2min, r2max] = r2.split('-');
-        return Math.min(r1min, r2min) + '-' + Math.max(r1max, r2max);
+        return Math.min(parseInt(r1min), parseInt(r2min)) + '-' + Math.max(parseInt(r1max), parseInt(r2max));
     }
 });

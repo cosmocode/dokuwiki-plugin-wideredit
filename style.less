@@ -1,11 +1,11 @@
 .dokuwiki .secedit.editbutton_section .btn_secedit button {
     user-select: none;
 
-    &.holding {
-        border-color: green;
-    }
+    transition: border 350ms; // time should match JS code LONGPRESS const
 
     &.selected {
-        border-color: red;
+        border-style: dashed;
+        border-color: @ini_link;
+        border-width: 2px;
     }
 }
