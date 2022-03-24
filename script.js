@@ -1,84 +1,30 @@
 jQuery(function () {
-    let timer = 0;
-    let selected = null;
-    let cancelled = false;
     const $buttons = jQuery('.dokuwiki .secedit.editbutton_section .btn_secedit button');
-
-    const LONGPRESS = 350;  // same as CSS transition time
 
     $buttons
         /**
-         * disable standard action
+         * Set selected button on context click
          */
-        .on('click', (event) => {
-            event.stopPropagation();
-            event.preventDefault();
-            return false;
-        })
-        /**
-         * Start counter for longpress detection
-         */
-        .on('mousedown touchstart', (event) => {
-            dragging = false;
-            if (event.targetTouches && event.targetTouches.length > 1) return; // multitouch
+        .on('contextmenu', (event) => {
             event.stopPropagation();
             event.preventDefault();
 
             const target = event.target;
-            timer = Date.now();
-            cancelled = false;
-            // start the CSS transition
             $buttons.not(target).removeClass('selected');
             jQuery(target).toggleClass('selected');
         })
         /**
-         * Check if the finger dragged off the button and cancel processing then
+         * Adjust range if selection exists
          */
-        .on('touchmove', (event) => {
-            if (cancelled) return;
+        .on('click', (event) => {
             const target = event.target;
-            if (target !== document.elementFromPoint(
-                event.changedTouches[0].clientX,
-                event.changedTouches[0].clientY
-            )) {
-                //dragged off element - cancel
-                jQuery(target).toggleClass('selected');
-                cancelled = true;
-            }
-        })
-        /**
-         * Handle button release
-         */
-        .on('mouseup touchend', (event) => {
-            if (cancelled) return;
-            if (event.targetTouches && event.targetTouches.length > 1) return; // multitouch
-            event.stopPropagation();
-            event.preventDefault();
-
-            const target = event.target;
-            const $me = jQuery(target);
-
-            const timed = Date.now() - timer;
-            const isLongpress = timed > LONGPRESS;
-
-            $buttons.removeClass('selected');
-            if (isLongpress) {
-                if (selected === target) {
-                    selected = null;
-                } else {
-                    selected = target;
-                    $me.addClass('selected');
-                }
-            } else {
-                if (selected !== null) {
-                    // multi edit, replace the range
-                    target.form.elements['range'].value = newRange(
-                        target.form.elements['range'].value,
-                        selected.form.elements['range'].value
-                    );
-                }
-                // submit the form
-                target.form.submit();
+            const selected = $buttons.filter('.selected').get(0);
+            if (selected !== null) {
+                // multi edit, replace the range
+                target.form.elements['range'].value = newRange(
+                    target.form.elements['range'].value,
+                    selected.form.elements['range'].value
+                );
             }
         })
     ;
