@@ -66,6 +66,11 @@ jQuery(function () {
     function newRange(r1, r2) {
         const [r1min, r1max] = r1.split('-');
         const [r2min, r2max] = r2.split('-');
-        return Math.min(parseInt(r1min), parseInt(r2min)) + '-' + Math.max(parseInt(r1max), parseInt(r2max));
+
+        let min = Math.min(parseInt(r1min), parseInt(r2min));
+        let max = 0;
+        if (r1max !== '' && r2max !== '') max = Math.max(parseInt(r1max), parseInt(r2max));
+
+        return `${min}-${max}`;
     }
 });
