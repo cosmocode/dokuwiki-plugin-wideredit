@@ -1,6 +1,7 @@
 jQuery(function () {
     let timer = 0;
     let selected = null;
+    let cancelled = false;
     const $buttons = jQuery('.dokuwiki .secedit.editbutton_section .btn_secedit button');
 
     const LONGPRESS = 350;  // same as CSS transition time
@@ -18,20 +19,38 @@ jQuery(function () {
          * Start counter for longpress detection
          */
         .on('mousedown touchstart', (event) => {
+            dragging = false;
             if (event.targetTouches && event.targetTouches.length > 1) return; // multitouch
             event.stopPropagation();
             event.preventDefault();
 
             const target = event.target;
             timer = Date.now();
+            cancelled = false;
             // start the CSS transition
             $buttons.not(target).removeClass('selected');
             jQuery(target).toggleClass('selected');
         })
         /**
+         * Check if the finger dragged off the button and cancel processing then
+         */
+        .on('touchmove', (event) => {
+            if (cancelled) return;
+            const target = event.target;
+            if (target !== document.elementFromPoint(
+                event.changedTouches[0].clientX,
+                event.changedTouches[0].clientY
+            )) {
+                //dragged off element - cancel
+                jQuery(target).toggleClass('selected');
+                cancelled = true;
+            }
+        })
+        /**
          * Handle button release
          */
         .on('mouseup touchend', (event) => {
+            if (cancelled) return;
             if (event.targetTouches && event.targetTouches.length > 1) return; // multitouch
             event.stopPropagation();
             event.preventDefault();
