@@ -18,7 +18,11 @@ jQuery(function () {
          * Start counter for longpress detection
          */
         .on('mousedown touchstart', (event) => {
-            const target = event.targetTouches ? event.targetTouches[0].target : event.target;
+            if (event.targetTouches && event.targetTouches.length > 1) return; // multitouch
+            event.stopPropagation();
+            event.preventDefault();
+
+            const target = event.target;
             timer = Date.now();
             // start the CSS transition
             $buttons.not(target).removeClass('selected');
@@ -27,15 +31,19 @@ jQuery(function () {
         /**
          * Handle button release
          */
-        .on('mouseup touchstop', (event) => {
-            const target = event.targetTouches ? event.targetTouches[0].target : event.target;
+        .on('mouseup touchend', (event) => {
+            if (event.targetTouches && event.targetTouches.length > 1) return; // multitouch
+            event.stopPropagation();
+            event.preventDefault();
+
+            const target = event.target;
             const $me = jQuery(target);
 
             const timed = Date.now() - timer;
             const isLongpress = timed > LONGPRESS;
 
+            $buttons.removeClass('selected');
             if (isLongpress) {
-                $buttons.removeClass('selected');
                 if (selected === target) {
                     selected = null;
                 } else {
