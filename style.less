@@ -1,9 +1,17 @@
 .dokuwiki .secedit.editbutton_section .btn_secedit button {
     user-select: none;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
 
     &.selected {
-        border-style: dashed;
-        border-color: @ini_link;
-        border-width: 2px;
+        box-shadow: none;
+
+        border-top-color: #a8a8a8;
+        border-left-color: #a8a8a8;
+        border-right-color: #cccccc;
+        border-bottom-color: #e4e4e4;
+ 
+        background:
+        linear-gradient(90deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 0.12em),
+        linear-gradient(180deg, rgb(173,173,173) 0%, rgb(222,222,222) 14%, rgb(240,240,240) 70%, rgb(255,255,255) 100%);
     }
 }
