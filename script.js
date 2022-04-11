@@ -19,8 +19,13 @@ jQuery(function () {
         .on('click', (event) => {
             const target = event.target;
             const selected = $buttons.filter('.selected').get(0);
-            if (selected !== null) {
-                // multi edit, replace the range
+            if (selected !== null) { // multi edit
+                // if other section comes first, use its hid and summary
+                if (selected.form.elements['range'].value < target.form.elements['range'].value) {
+                    target.form.elements['hid'].value = selected.form.elements['hid'].value;
+                    target.form.elements['summary'].value = selected.form.elements['summary'].value;
+                }
+                // replace the range
                 target.form.elements['range'].value = newRange(
                     target.form.elements['range'].value,
                     selected.form.elements['range'].value
