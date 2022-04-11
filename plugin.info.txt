@@ -1,7 +1,7 @@
 base   wideredit
 author Andreas Gohr
 email  dokuwiki@cosmocode.de
-date   2022-04-04
+date   2022-04-11
 name   wideredit plugin
 desc   Multi-Section Editing for DokuWiki
 url    https://www.dokuwiki.org/plugin:wideredit
